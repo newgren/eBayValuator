@@ -1,0 +1,19 @@
+Plan:
+
+- requests ^
+- categories
+- uncheck all the bad listings
+- most recent sales *** this is a must ***
+- sort by
+	- sale type
+	- condition
+
+
+Description:
+
+	How much could I sell my item on eBay for if I were to list it today?
+	Will I make more selling it Buy It Now or Auction?
+	Will I make more by opening up sales to international customers?
+	What category should I list my item in to make the most money?
+	Will offering free shipping lead to a higher profit?
+	How many have sold in the past week/month/year?
