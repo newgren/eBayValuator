@@ -9,6 +9,10 @@ Plan:
 	- condition
 
 
+TODO:
+	- numpy stats
+
+
 Description:
 
 	How much could I sell my item on eBay for if I were to list it today?
@@ -16,4 +20,4 @@ Description:
 	Will I make more by opening up sales to international customers?
 	What category should I list my item in to make the most money?
 	Will offering free shipping lead to a higher profit?
-	How many have sold in the past week/month/year?
+	How many have sold in the past week/month?

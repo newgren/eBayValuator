@@ -8,3 +8,5 @@ paginationInput.entriesPerPage=1
 &itemFilter(0).value(1)=AuctionWithBIN
 &itemFilter(1).name=Condition
 &itemFilter(1).value(0)=3000
+&itemFilter(2).name=SoldItemsOnly
+&itemFilter(2).value=true
