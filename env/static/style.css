@@ -1,0 +1,33 @@
+body {
+	font-family: Roboto;
+	font-weight: 300;
+}
+h1 {
+	font-weight: 400;
+}
+
+.centerBox {
+	width:100%;
+	text-align: center;
+}
+.form {
+	font-size:25px;
+}
+
+#sub {
+	width:50px;
+}
+
+span.space {
+	visibility: hidden;
+}
+input {
+	border:none;
+	border-bottom: 1px solid black;
+	font-size: 25px;
+	font-weight: 300;
+}
+
+input:focus {
+    outline-width: 0;
+}

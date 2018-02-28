@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<title>eValuator</title>
+<link rel="stylesheet" type="text/css" href="static/style.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
+<script  type='text/javascript' src='static/script.js'></script>
+
+
+<body>
+	<div class="centerBox">
+		<h1>Welcome to eValuator</h1>
+		<br><br>
+		<div class="form">
+			<p>I want to sell a(n) <span class="space">.</span><input id="itemNameField" type="text" name="item" spellcheck="false"><span class="space">...</span><button id="sub" onclick="submit()">Go</button></p>
+		</div>
+		
+
+	</div>
+	
+	{% if outputDict %}
+	{% else %}
+	{% endif %}
+</body>

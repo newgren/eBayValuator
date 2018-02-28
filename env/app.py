@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, request
+from flask import Flask, request, render_template
 import base64
 import urllib
 import urllib2
@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-	return "Main"
+	return render_template('main.html')
 
 @app.route('/debug')
 def debug():
@@ -59,13 +59,18 @@ def getcomparison():
 	'''
 	itemName = ""
 	itemsPerPage = 50
+
+	outputString = ""
+	outputDict = {} #sent to html
 	try:
+		outputDict["itemName"] = request.args['itemName']
 		itemName = urllib2.quote(request.args['itemName'])
 		print itemName
 	except ValueError:
 		print ValueError
 
-	outputString = ""
+	
+	
 
 	# Num sold in past week, month
 
@@ -75,16 +80,16 @@ def getcomparison():
 	aprices = []
 	for i in xrange(itemsPerPage):
 		aprices.append(float(aobj[i]['sellingStatus'][0]['currentPrice'][0]['__value__']))
-	aprices = removeOutliers(sorted(aprices))
 
 	fixedUrl = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SECURITY-APPNAME=TravisNe-Project1-PRD-e45f6444c-e24c2db3&keywords="+str(itemName)+"&RESPONSE-DATA-FORMAT=JSON&paginationInput.entriesPerPage="+str(itemsPerPage)+"&itemFilter(0).name=ListingType&itemFilter(0).value(0)=FixedPrice&itemFilter(1).name=Condition&itemFilter(1).value(0)=3000&itemFilter(2).name=SoldItemsOnly&itemFilter(2).value=true"
 	bobj = urlToJSON(fixedUrl)	
 	bprices = []
 	for i in xrange(itemsPerPage):
 		bprices.append(float(bobj[i]['sellingStatus'][0]['currentPrice'][0]['__value__']))
-	bprices = removeOutliers(sorted(bprices))
 
-	outputString += str(median(aprices)) + "<br>" + str(median(bprices))+"<br><br>"
+	outputDict["auctionMed"] = median(removeOutliers(sorted(aprices)))
+	outputDict["BINMed"] = median(removeOutliers(sorted(bprices)))
+	###outputString += str(median(aprices)) + "<br>" + str(median(bprices))+"<br><br>"
 
 	# Free Shipping vs Shipping
 	freeUrl = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SECURITY-APPNAME=TravisNe-Project1-PRD-e45f6444c-e24c2db3&keywords="+str(itemName)+"&RESPONSE-DATA-FORMAT=JSON&paginationInput.entriesPerPage="+str(itemsPerPage)+"&itemFilter(0).name=Condition&itemFilter(0).value(0)=3000&itemFilter(1).name=SoldItemsOnly&itemFilter(1).value=true&itemFilter(2).name=FreeShippingOnly&itemFilter(2).value=true"
@@ -92,7 +97,6 @@ def getcomparison():
 	aprices = []
 	for i in xrange(itemsPerPage):
 		aprices.append(float(aobj[i]['sellingStatus'][0]['currentPrice'][0]['__value__']))
-	aprices = removeOutliers(sorted(aprices))
 
 	paidUrl = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SECURITY-APPNAME=TravisNe-Project1-PRD-e45f6444c-e24c2db3&keywords="+str(itemName)+"&RESPONSE-DATA-FORMAT=JSON&paginationInput.entriesPerPage="+str(itemsPerPage)+"&itemFilter(0).name=Condition&itemFilter(0).value(0)=3000&itemFilter(1).name=SoldItemsOnly&itemFilter(1).value=true&itemFilter(2).name=FreeShippingOnly&itemFilter(2).value=false"
 	bobj = urlToJSON(paidUrl)	
@@ -100,12 +104,14 @@ def getcomparison():
 	for i in xrange(itemsPerPage):
 		#this is broken
 		bprices.append(float(bobj[i]['sellingStatus'][0]['currentPrice'][0]['__value__']))#+ float(bobj[i]['shippingInfo'][0]['shippingServiceCost'][0]['__value__']))
-	bprices = removeOutliers(sorted(bprices))
 
-	outputString += str(median(aprices)) + "<br>" + str(median(bprices))
+	outputDict["freeshipMed"] = median(removeOutliers(sorted(aprices)))
+	outputDict["costshipMed"] = median(removeOutliers(sorted(bprices)))
+	###outputString += str(median(aprices)) + "<br>" + str(median(bprices))
 
 	# US vs International
 
+	return render_template('main.html', outputDict=outputDict)
 	return outputString
 
 
@@ -202,7 +208,7 @@ def removeOutliers(data):
 def median(lst):
     sortedLst = sorted(lst)
     lstLen = len(lst)
-    index = (lstLen - 1) // 2
+    index = (lstLen - 1) / 2
 
     if (lstLen % 2):
         return sortedLst[index]
